@@ -19,9 +19,9 @@ namespace NZWalkAPI.Controllers
             this.mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetAllRegions()
+        public async Task<IActionResult> GetAllRegions()
         {
-            var region = regionRepository.GetAllRegion();
+            var region = await regionRepository.GetAllRegion();
 
             //var regionsDTO = new List<Model.DTO.RegionDTO>();
             //region.ToList().ForEach(region =>
@@ -38,8 +38,9 @@ namespace NZWalkAPI.Controllers
             //    };
             //    regionsDTO.Add(regionDTO);
             //});
-          var regionsDTO =  mapper.Map<List<Model.DTO.RegionDTO>>(region);
-            return Ok(regionsDTO);
+             var regionsDTO =  mapper.Map<List<Model.DTO.RegionDTO>>(region);
+             return this.StatusCode(StatusCodes.Status200OK, regionsDTO);
+            // return Ok(regionsDTO);
         }
     }
 }

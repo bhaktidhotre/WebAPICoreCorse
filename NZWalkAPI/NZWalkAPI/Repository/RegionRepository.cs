@@ -12,9 +12,9 @@ namespace NZWalkAPI.Repository
         {
             this.nZWalkDbContext = nZWalkDbContext;
         }
-        IEnumerable<Region> IRegionRepository.GetAllRegion()
+        public async Task<IEnumerable<Region>> GetAllRegion()
         {
-            return nZWalkDbContext.Regions.ToList();
+            return await nZWalkDbContext.Regions.ToListAsync();
         }
     }
 }
