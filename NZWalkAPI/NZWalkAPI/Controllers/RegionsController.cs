@@ -163,52 +163,53 @@ namespace NZWalkAPI.Controllers
             // return CreatedAtAction(nameof(GetRegion), new {id =regionDTO.Id },  );
         }
 
-        //[HttpPut]
-        //[Route("UpdateRegion")]
-        //public async Task<IActionResult> UpdateRegion(Guid Id ,Model.DTO.UpdateRegionDTO updateRegion)
-        //{
-        //    //Request (DTO) to Domain Model
-        //    var region = new Region()
-        //    {
-        //        Code = addRegion.Code,
-        //        Area = addRegion.Area,
-        //        Lat = addRegion.Lat,
-        //        Long = addRegion.Long,
-        //        Name = addRegion.Name,
-        //        Population = addRegion.Population
-        //    };
-        //    //Pass details to Repository
-        //    region = await regionRepository.AddRegion(region);
-        //    //Convert back to DTO
-        //    var regionDTO = new Model.DTO.RegionDTO
-        //    {
-        //        Id = region.Id,
-        //        Code = region.Code,
-        //        Area = region.Area,
-        //        Lat = region.Lat,
-        //        Long = region.Long,
-        //        Name = region.Name,
-        //        Population = region.Population
-        //    };
-        //    if (regionDTO == null)
-        //    {
-        //        res.Code = Convert.ToInt32(HttpStatusCode.BadRequest);
-        //        res.Status = true;
-        //        res.Message = "Somthing Went to wrong";
-        //        res.Data = regionDTO;
-        //        return this.StatusCode(StatusCodes.Status400BadRequest, res);
-        //    }
-        //    else
-        //    {
-        //        res.Code = Convert.ToInt32(HttpStatusCode.OK);
-        //        res.Status = true;
-        //        res.Message = "Record Inserted Successfully";
-        //        res.Data = regionDTO;
-        //        return this.StatusCode(StatusCodes.Status200OK, res);
-        //    }
-        //    //  return new JsonResult(Ok(regionDTO));
-        //    // return CreatedAtAction(nameof(GetRegion), new {id =regionDTO.Id },  );
-        //}
+        [HttpPut]
+        [Route("UpdateRegion{Id:Guid}")]
+        public async Task<IActionResult> UpdateRegion([FromRoute] Guid Id,[FromBody] Model.DTO.UpdateRegionDTO updateRegion)
+        {
+            //Request (DTO) to Domain Model
+            var region = new Region()
+            {
+                Code = updateRegion.Code,
+                Area = updateRegion.Area,
+                Lat = updateRegion.Lat,
+                Long = updateRegion.Long,
+                Name = updateRegion.Name,
+                Population = updateRegion.Population
+            };
+            //Pass details to Repository
+            region = await regionRepository.UpdateRegion(Id,region);
+            //Convert back to DTO
+            
+            if (region == null)
+            {
+                res.Code = Convert.ToInt32(HttpStatusCode.NotFound);
+                res.Status = true;
+                res.Message = "Record Not Found";
+                res.Data = null;
+                return this.StatusCode(StatusCodes.Status404NotFound, res);
+            }
+            else
+            {
+                var regionDTO = new Model.DTO.RegionDTO
+                {
+                    Id = region.Id,
+                    Code = region.Code,
+                    Area = region.Area,
+                    Lat = region.Lat,
+                    Long = region.Long,
+                    Name = region.Name,
+                    Population = region.Population
+                };
+                res.Code = Convert.ToInt32(HttpStatusCode.OK);
+                res.Status = true; 
+                res.Message = "Record Updated Successfully";
+                res.Data = regionDTO;
+                return this.StatusCode(StatusCodes.Status200OK, res);
+            }
+            //  return new JsonResult(Ok(regionDTO));
+            // return CreatedAtAction(nameof(GetRegion), new {id =regionDTO.Id },  );
+        }
 
     }
 }
